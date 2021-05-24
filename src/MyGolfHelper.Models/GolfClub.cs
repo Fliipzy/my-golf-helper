@@ -11,6 +11,8 @@ namespace MyGolfHelper.Models
         public long Id { get; set; }
         public string Name { get; set; }
 
+        public long AddressId { get; set; }
+        public virtual Address Address { get; set; }
         public virtual ICollection<GolfCourse> Courses { get; set; }
     }
 }

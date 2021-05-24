@@ -8,6 +8,7 @@ namespace MyGolfHelper.Models
 {
     public class Address : BaseEntity
     {
+        public long Id { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
@@ -16,7 +17,6 @@ namespace MyGolfHelper.Models
         public string Region { get; set; }
         public string State { get; set; }
 
-        public long CourseId { get; set; }
-        public virtual GolfCourse Course { get; set; }
+        public virtual GolfClub Club { get; set; }
     }
 }

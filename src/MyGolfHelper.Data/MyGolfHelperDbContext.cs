@@ -98,6 +98,20 @@ namespace MyGolfHelper.Data
                     .WithMany(r => r.UserRoles);
             });
 
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.ToTable("Address");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.AddressLine1).IsRequired();
+                entity.Property(e => e.AddressLine2).IsRequired();
+                entity.Property(e => e.City).IsRequired();
+                entity.Property(e => e.Country).IsRequired();
+                entity.Property(e => e.PostalCode).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
+            });
+
             modelBuilder.Entity<GolfClub>(entity =>
             {
                 entity.ToTable("GolfClub");
@@ -113,6 +127,10 @@ namespace MyGolfHelper.Data
                     .HasForeignKey(e => e.ClubId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                entity.HasOne(e => e.Address)
+                    .WithOne(e => e.Club)
+                    .HasForeignKey<GolfClub>(e => e.AddressId);
             });
 
             modelBuilder.Entity<GolfCourse>(entity =>
@@ -123,6 +141,7 @@ namespace MyGolfHelper.Data
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Name).HasMaxLength(70);
+                entity.Property(e => e.CreatedAt).IsRequired();
 
                 entity.HasOne(e => e.Ratings)
                     .WithOne(e => e.GolfCourse)
@@ -143,11 +162,22 @@ namespace MyGolfHelper.Data
 
                 entity.HasKey(e => e.GolfCourseId);
 
+                entity.Property(e => e.CreatedAt).IsRequired();
+
+                entity.HasOne(e => e.GolfCourse)
+                    .WithOne(e => e.Ratings);
             });
 
             modelBuilder.Entity<Hazard>(entity => 
             {
                 entity.ToTable("Hazard");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Type).IsRequired();
+
+                entity.HasIndex(e => e.Type).IsUnique();
 
                 entity.HasMany(e => e.GolfHoleHazards)
                     .WithOne(e => e.Hazard)
@@ -162,6 +192,7 @@ namespace MyGolfHelper.Data
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Par).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
 
                 entity.HasMany(e => e.GolfHoleHazards)
                     .WithOne(e => e.GolfHole)
@@ -174,6 +205,8 @@ namespace MyGolfHelper.Data
 
                 entity.HasKey(e => new { e.GolfHoleId, e.HazardId });
 
+                entity.Property(e => e.CreatedAt).IsRequired();
+
                 entity.HasOne(e => e.GolfHole)
                     .WithMany(e => e.GolfHoleHazards);
                 entity.HasOne(e => e.Hazard)
@@ -185,6 +218,8 @@ namespace MyGolfHelper.Data
                 entity.ToTable("PlayerStatistic");
 
                 entity.HasKey(e => e.UserId);
+
+                entity.Property(e => e.CreatedAt).IsRequired();
             });
         }
 

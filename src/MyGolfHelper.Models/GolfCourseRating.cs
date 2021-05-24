@@ -8,6 +8,7 @@ namespace MyGolfHelper.Models
 {
     public class GolfCourseRating : BaseEntity
     {
+        public long GolfCourseId { get; set; }
         public float MenWhiteCourse { get; set; }
         public float MenWhiteSlope { get; set; }
         public float MenYellowCourse { get; set; }
@@ -21,7 +22,6 @@ namespace MyGolfHelper.Models
         public float WomenRedCourse { get; set; }
         public float WomenRedSlope { get; set; }
 
-        public long GolfCourseId { get; set; }
         public virtual GolfCourse GolfCourse { get; set; }
     }
 }

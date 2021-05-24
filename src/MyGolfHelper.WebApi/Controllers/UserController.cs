@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace MyGolfHelper.WebApi.Controllers
 {
     [ApiController]
+    [Route("api/users")]
     //[Authorize]
     public class UserController : ControllerBase
     {
@@ -26,33 +27,54 @@ namespace MyGolfHelper.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
 
-            if (users.Any())
+            if (!users.Any())
             {
-                var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
-                return Ok(userDtos);
+                return NoContent();
             }
 
-            return NoContent();
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
+            return Ok(userDtos);
         }
 
         [HttpGet]
-        [Route("users/{id}")]
-        public async Task<IActionResult> GetUser(uint id)
+        [Route("{id}")]
+        public async Task<ActionResult<UserDto>> GetUser(long id)
         {
             var user = await _userService.FindUserAsync(id);
 
-            if (user != null)
+            if (user == null)
             {
-                var userDto = _mapper.Map<UserDto>(user);
-                return Ok(userDto);
+                return NotFound();
             }
 
-            return NoContent();
+            var userDto = _mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateUser(long id, UserDto userDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updatedUser = _mapper.Map<User>(userDto);
+            updatedUser.Id = id;
+
+            var updatedResult = await _userService.UpdateUserAsync(updatedUser);
+
+            if (!updatedResult)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

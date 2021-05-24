@@ -8,8 +8,10 @@ namespace MyGolfHelper.Models
 {
     public class GolfHoleHazard : BaseEntity
     {
-        public long Id { get; set; }
-        public string Type { get; set; }
-        public string Description { get; set; }
+        public long GolfHoleId { get; set; }
+        public virtual GolfHole GolfHole { get; set; }
+
+        public long HazardId { get; set; }
+        public virtual Hazard Hazard { get; set; }
     }
 }

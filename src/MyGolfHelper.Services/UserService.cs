@@ -39,7 +39,7 @@ namespace MyGolfHelper.Services
             }
         }
 
-        public Task<User> UpdateUserAsync(long userId, User user)
+        public Task<bool> UpdateUserAsync(User user)
         {
             throw new NotImplementedException();
         }

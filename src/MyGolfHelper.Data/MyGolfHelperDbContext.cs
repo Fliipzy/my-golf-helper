@@ -18,6 +18,7 @@ namespace MyGolfHelper.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<PlayerStatistic> PlayerStatistics { get; set; }
         public DbSet<UserInformation> UserInformations { get; set; }
         public DbSet<GolfClub> GolfClubs { get; set; }
         public DbSet<GolfCourse> GolfCourses { get; set; }
@@ -43,6 +44,12 @@ namespace MyGolfHelper.Data
                 entity.HasOne(e => e.Information)
                     .WithOne(e => e.User)
                     .HasForeignKey<UserInformation>(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                entity.HasOne(e => e.PlayerStatistics)
+                    .WithOne(e => e.User)
+                    .HasForeignKey<PlayerStatistic>(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
@@ -100,6 +107,12 @@ namespace MyGolfHelper.Data
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(70);
                 entity.Property(e => e.CreatedAt).IsRequired();
+
+                entity.HasMany(e => e.Courses)
+                    .WithOne(e => e.Club)
+                    .HasForeignKey(e => e.ClubId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<GolfCourse>(entity =>
@@ -116,6 +129,12 @@ namespace MyGolfHelper.Data
                     .HasForeignKey<GolfCourseRating>(e => e.GolfCourseId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                entity.HasMany(e => e.Holes)
+                    .WithOne(e => e.Course)
+                    .HasForeignKey(e => e.CourseId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<GolfCourseRating>(entity =>
@@ -126,14 +145,46 @@ namespace MyGolfHelper.Data
 
             });
 
+            modelBuilder.Entity<Hazard>(entity => 
+            {
+                entity.ToTable("Hazard");
+
+                entity.HasMany(e => e.GolfHoleHazards)
+                    .WithOne(e => e.Hazard)
+                    .HasForeignKey(e => e.HazardId);
+            });
+
             modelBuilder.Entity<GolfHole>(entity =>
             {
                 entity.ToTable("GolfHole");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Par).IsRequired();
+
+                entity.HasMany(e => e.GolfHoleHazards)
+                    .WithOne(e => e.GolfHole)
+                    .HasForeignKey(e => e.GolfHoleId);
             });
 
             modelBuilder.Entity<GolfHoleHazard>(entity =>
             {
                 entity.ToTable("GolfHoleHazard");
+
+                entity.HasKey(e => new { e.GolfHoleId, e.HazardId });
+
+                entity.HasOne(e => e.GolfHole)
+                    .WithMany(e => e.GolfHoleHazards);
+                entity.HasOne(e => e.Hazard)
+                    .WithMany(e => e.GolfHoleHazards);
+            });
+
+            modelBuilder.Entity<PlayerStatistic>(entity =>
+            {
+                entity.ToTable("PlayerStatistic");
+
+                entity.HasKey(e => e.UserId);
             });
         }
 

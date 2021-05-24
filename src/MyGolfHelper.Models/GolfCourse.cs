@@ -11,8 +11,7 @@ namespace MyGolfHelper.Models
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Type { get; set; }
-        public int Par { get; set; }
+        public int Par => Holes.Sum(h => h.Par);
 
         public virtual GolfCourseRating Ratings { get; set; }
         public virtual ICollection<GolfHole> Holes { get; set; }

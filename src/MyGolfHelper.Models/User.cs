@@ -12,6 +12,7 @@ namespace MyGolfHelper.Models
         public string Password { get; set; }
 
         public virtual UserInformation Information { get; set; }
+        public virtual PlayerStatistic PlayerStatistics { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

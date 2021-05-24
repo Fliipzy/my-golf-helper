@@ -10,6 +10,6 @@ namespace MyGolfHelper.Services
     {
         Task<IEnumerable<UserType>> GetAllUsersAsync();
         Task<UserType> FindUserAsync(UserIdType userId);
-        Task<UserType> UpdateUserAsync(UserIdType userId, UserType user);
+        Task<bool> UpdateUserAsync(UserType user);
     }
 }

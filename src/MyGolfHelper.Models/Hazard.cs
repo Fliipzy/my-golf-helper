@@ -8,7 +8,7 @@ namespace MyGolfHelper.Models
 {
     public class Hazard
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Type { get; set; }
 
         public virtual ICollection<GolfHoleHazard> GolfHoleHazards { get; set; }

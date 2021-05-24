@@ -18,15 +18,7 @@ namespace MyGolfHelper.Models.AutoMapper
         private void ConfigureMaps()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<User, UserUpdateRequestDto>()
-                .ForMember(dest => dest.FirstName, cfg => cfg.MapFrom(src => src.Information.FirstName))
-                .ForMember(dest => dest.LastName, cfg => cfg.MapFrom(src => src.Information.LastName))
-                .ForMember(dest => dest.Email, cfg => cfg.MapFrom(src => src.Information.Email))
-                .ForMember(dest => dest.PhoneNumber, cfg => cfg.MapFrom(src => src.Information.PhoneNumber))
-                .ForMember(dest => dest.BirthDate, cfg => cfg.MapFrom(src => src.Information.BirthDate))
-                .ReverseMap();
             CreateMap<UserInformation, UserInformationDto>().ReverseMap();
-            CreateMap<UserInformation, UserUpdateRequestDto>().ReverseMap();
         }
     }
 }

@@ -10,8 +10,8 @@ using MyGolfHelper.Models;
 
 namespace MyGolfHelper.WebApi.Controllers
 {
-    [Route("api/golfclubs")]
     [ApiController]
+    [Route("api/golfclubs")]
     public class GolfClubController : ControllerBase
     {
         private readonly MyGolfHelperDbContext _context;
@@ -39,7 +39,7 @@ namespace MyGolfHelper.WebApi.Controllers
                 return NotFound();
             }
 
-            return golfClub;
+            return Ok(golfClub);
         }
 
         // PUT: api/GolfClub/5

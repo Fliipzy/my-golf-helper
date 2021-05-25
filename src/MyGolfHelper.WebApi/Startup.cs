@@ -38,7 +38,7 @@ namespace MyGolfHelper.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyGolfHelper.WebApi", Version = "v1" });
             });
 
-            // Database Configuration
+            // Database configurations
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContextFactory<MyGolfHelperDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -50,6 +50,9 @@ namespace MyGolfHelper.WebApi
 
             // Service layer configurations
             services.AddScoped<IUserService<User, long>, UserService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IGolfClubService<GolfClub, long>, GolfClubService>();
+            services.AddScoped<IGolfCourseService<GolfCourse, long>, GolfCourseService>();
 
         }
 

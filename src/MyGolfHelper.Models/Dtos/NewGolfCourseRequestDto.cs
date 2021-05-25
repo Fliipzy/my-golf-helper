@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MyGolfHelper.Models.Dtos
 {
-    public class UserLoginRequestDto
+    public class NewGolfCourseRequestDto
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public long ClubId { get; set; }
     }
 }

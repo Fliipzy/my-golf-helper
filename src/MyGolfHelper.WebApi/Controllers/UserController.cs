@@ -56,7 +56,7 @@ namespace MyGolfHelper.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(NewUserDto newUserDto)
+        public async Task<ActionResult<User>> PostUser(NewUserRequestDto newUserDto)
         {
             if (!ModelState.IsValid)
             {

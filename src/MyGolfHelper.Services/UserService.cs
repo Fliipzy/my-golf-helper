@@ -50,6 +50,16 @@ namespace MyGolfHelper.Services
             }
         }
 
+        public async Task<User> FindUserByEmailAsync(string email)
+        {
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return await context.Users
+                    .Include(user => user.Information)
+                    .FirstOrDefaultAsync(u => u.Information.Email == email);
+            }
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             using (var context = _contextFactory.CreateDbContext())

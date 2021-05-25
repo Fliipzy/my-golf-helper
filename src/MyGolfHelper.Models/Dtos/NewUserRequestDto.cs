@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyGolfHelper.Models.Dtos
 {
-    public class NewUserDto
+    public class NewUserRequestDto
     {
         [Required]
         [MaxLength(30)]

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace MyGolfHelper.Services
 {
-    public interface IUserService<UserType, UserIdType>
+    public interface IUserService<TUser, TUserId>
     {
-        Task<IEnumerable<UserType>> GetAllUsersAsync();
-        Task<UserType> FindUserAsync(UserIdType userId);
-        Task<bool> UpdateUserAsync(UserType user);
+        Task<IEnumerable<TUser>> GetAllUsersAsync();
+        Task<TUser> FindUserAsync(TUserId userId);
+        Task<TUser> CreateUser(TUser user);
+        Task<bool> UpdateUserAsync(TUser user);
     }
 }

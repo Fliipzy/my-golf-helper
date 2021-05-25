@@ -9,5 +9,9 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "SqlServer": "Data Source=.\\SQLExpress;Database=MyGolfHelper;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "JwtOptions": {
+    "Secret": "super_secret_and_random_bytes",
+    "ExpiresInSeconds": 3600
   }
 }

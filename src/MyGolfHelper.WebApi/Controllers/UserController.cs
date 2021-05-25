@@ -55,6 +55,21 @@ namespace MyGolfHelper.WebApi.Controllers
             return Ok(userDto);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<User>> PostUser(NewUserDto newUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var mappedUser = _mapper.Map<User>(newUserDto);
+            var user = await _userService.CreateUser(mappedUser);
+            var mappedUserDto = _mapper.Map<UserDto>(user);
+
+            return Ok(mappedUserDto);
+        }
+
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateUser(long id, UserDto userDto)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 using MyGolfHelper.Data;
 using MyGolfHelper.Models;
 using MyGolfHelper.Models.Dtos;
@@ -17,6 +18,26 @@ namespace MyGolfHelper.Services
         public UserService(IDbContextFactory<MyGolfHelperDbContext> contextFactory)
         {
             _contextFactory = contextFactory;
+        }
+
+        public async Task<User> CreateUser(User user)
+        {
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                await context.Users.AddAsync(user);
+
+                try
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 12);
+                }
+                catch (SaltParseException e)
+                {
+                    return null;
+                }
+
+                await context.SaveChangesAsync();
+                return user;
+            }
         }
 
         public async Task<User> FindUserAsync(long userId)

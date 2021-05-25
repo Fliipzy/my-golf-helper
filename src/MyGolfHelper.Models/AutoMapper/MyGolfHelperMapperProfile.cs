@@ -18,6 +18,8 @@ namespace MyGolfHelper.Models.AutoMapper
         private void ConfigureMaps()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, NewUserDto>().IncludeMembers(src => src.Information).ReverseMap();
+            CreateMap<UserInformation, NewUserDto>().ReverseMap();
             CreateMap<UserInformation, UserInformationDto>().ReverseMap();
         }
     }

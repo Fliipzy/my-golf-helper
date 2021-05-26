@@ -8,10 +8,10 @@ namespace MyGolfHelper.Services
 {
     public interface IGolfCourseService<TGolfCourse, TGolfCourseId>
     {
-        public Task<IEnumerable<TGolfCourse>> GetAllGolfCourses();
-        public Task<TGolfCourse> FindGolfCourse(TGolfCourseId id);
-        public Task<int> UpdateGolfCourse(TGolfCourse golfCourse);
-        public Task<bool> CreateGolfCourse(TGolfCourse golfCourse);
-        public Task<int> DeleteGolfCourse(TGolfCourseId id);
+        public Task<IEnumerable<TGolfCourse>> GetAllGolfCoursesAsync();
+        public Task<TGolfCourse> FindGolfCourseAsync(TGolfCourseId id);
+        public Task<int> UpdateGolfCourseAsync(TGolfCourse golfCourse);
+        public Task<bool> CreateGolfCourseAsync(TGolfCourse golfCourse);
+        public Task<int> DeleteGolfCourseAsync(TGolfCourseId id);
     }
 }

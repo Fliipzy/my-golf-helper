@@ -18,7 +18,7 @@ namespace MyGolfHelper.Services
             _contextFactory = contextFactory;
         }
 
-        public async Task<bool> CreateGolfCourse(GolfCourse golfCourse)
+        public async Task<bool> CreateGolfCourseAsync(GolfCourse golfCourse)
         {
             using (var context = _contextFactory.CreateDbContext())
             {
@@ -27,22 +27,22 @@ namespace MyGolfHelper.Services
             }
         }
 
-        public Task<int> DeleteGolfCourse(long id)
+        public Task<int> DeleteGolfCourseAsync(long id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<GolfCourse> FindGolfCourse(long id)
+        public Task<GolfCourse> FindGolfCourseAsync(long id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<GolfCourse>> GetAllGolfCourses()
+        public Task<IEnumerable<GolfCourse>> GetAllGolfCoursesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateGolfCourse(GolfCourse golfCourse)
+        public Task<int> UpdateGolfCourseAsync(GolfCourse golfCourse)
         {
             throw new NotImplementedException();
         }

@@ -23,6 +23,7 @@ namespace MyGolfHelper.Models.AutoMapper
             CreateMap<UserInformation, UserInformationDto>().ReverseMap();
             CreateMap<GolfCourse, GolfCourseDto>().ReverseMap();
             CreateMap<NewGolfCourseRequestDto, GolfCourse>();
+            CreateMap<GolfClub, GolfClubDto>().ReverseMap();
         }
     }
 }

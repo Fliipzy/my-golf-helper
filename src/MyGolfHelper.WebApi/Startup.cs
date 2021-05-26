@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,14 +9,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyGolfHelper.Data;
 using MyGolfHelper.Models;
 using MyGolfHelper.Models.AutoMapper;
 using MyGolfHelper.Services;
+using MyGolfHelper.Services.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyGolfHelper.WebApi
@@ -53,6 +57,70 @@ namespace MyGolfHelper.WebApi
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IGolfClubService<GolfClub, long>, GolfClubService>();
             services.AddScoped<IGolfCourseService<GolfCourse, long>, GolfCourseService>();
+            
+            // JWT configuration
+            var jwtOptions = new JwtOptions();
+            Configuration.GetSection("JwtOptions").Bind(jwtOptions);
+            services.AddSingleton<IJwtService<User>>(new JwtService(jwtOptions));
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwtBearerOptions =>
+            {
+                jwtBearerOptions.SaveToken = true;
+                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            // Swagger configuration
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("MyGolfHelper API v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "MyGolfHelper API",
+                    Description = "This is all the endpoints for the MyGolfHelper Web API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Frederik Lundbeck Jørgensen",
+                        Email = "Frederiklundbeck@live.dk",
+                        Url = new Uri("https://github.com/fliipzy")
+                    }
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
 
         }
 
@@ -70,6 +138,7 @@ namespace MyGolfHelper.WebApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

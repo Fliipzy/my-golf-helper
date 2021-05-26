@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyGolfHelper.Services
+namespace MyGolfHelper.Models.Dtos
 {
-    public interface IJsonWebTokenService
+    public class NewGolfClubRequestDto
     {
-        string SignToken();
-        string VerifyToken();
     }
 }

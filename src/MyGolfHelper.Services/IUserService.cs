@@ -11,7 +11,7 @@ namespace MyGolfHelper.Services
         Task<IEnumerable<TUser>> GetAllUsersAsync();
         Task<TUser> FindUserAsync(TUserId userId);
         Task<TUser> FindUserByEmailAsync(string email);
-        Task<TUser> CreateUser(TUser user);
+        Task<TUser> CreateUserAsync(TUser user);
         Task<bool> UpdateUserAsync(TUser user);
     }
 }

@@ -2,37 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyGolfHelper.Data;
 using MyGolfHelper.Models;
+using MyGolfHelper.Models.Dtos;
+using MyGolfHelper.Services;
 
 namespace MyGolfHelper.WebApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/golfclubs")]
     public class GolfClubController : ControllerBase
     {
-        private readonly MyGolfHelperDbContext _context;
+        private readonly IGolfClubService<GolfClub, long> _golfClubService;
+        private readonly IMapper _mapper;
 
-        public GolfClubController(MyGolfHelperDbContext context)
+        public GolfClubController(IGolfClubService<GolfClub, long> golfClubService, IMapper mapper)
         {
-            _context = context;
+            _golfClubService = golfClubService;
+            _mapper = mapper;
         }
 
-        // GET: api/GolfClub
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GolfClub>>> GetGolfClubs()
         {
-            return await _context.GolfClubs.ToListAsync();
+            var golfClubs = await _golfClubService.GetAllGolfClubsAsync();
+
+            if (!golfClubs.Any())
+            {
+                return NoContent();
+            }
+
+            var golfClubDtos = _mapper.Map<IEnumerable<GolfClubDto>>(golfClubs);
+            return Ok(golfClubDtos);
         }
 
-        // GET: api/GolfClub/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GolfClub>> GetGolfClub(long id)
         {
-            var golfClub = await _context.GolfClubs.FindAsync(id);
+            var golfClub = await _golfClubService.FindGolfClubAsync(id);
 
             if (golfClub == null)
             {
@@ -42,67 +55,36 @@ namespace MyGolfHelper.WebApi.Controllers
             return Ok(golfClub);
         }
 
-        // PUT: api/GolfClub/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGolfClub(long id, GolfClub golfClub)
-        {
-            if (id != golfClub.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(golfClub).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GolfClubExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/GolfClub
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<GolfClub>> PostGolfClub(GolfClub golfClub)
+        public async Task<ActionResult<GolfClub>> PostGolfClub(NewGolfClubRequestDto newGolfClubRequestDto)
         {
-            _context.GolfClubs.Add(golfClub);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return CreatedAtAction("GetGolfClub", new { id = golfClub.Id }, golfClub);
+            var golfClub = _mapper.Map<GolfClub>(newGolfClubRequestDto);
+            var wasCreated = await _golfClubService.CreateGolfClubAsync(golfClub);
+
+            if (!wasCreated)
+            {
+                return UnprocessableEntity();
+            }
+
+            return Ok(golfClub);
         }
 
-        // DELETE: api/GolfClub/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGolfClub(long id)
         {
-            var golfClub = await _context.GolfClubs.FindAsync(id);
+            var golfClub = await _golfClubService.FindGolfClubAsync(id);
             if (golfClub == null)
             {
                 return NotFound();
             }
 
-            _context.GolfClubs.Remove(golfClub);
-            await _context.SaveChangesAsync();
-
+            await _golfClubService.DeleteGolfClubAsync(id);
             return NoContent();
-        }
-
-        private bool GolfClubExists(long id)
-        {
-            return _context.GolfClubs.Any(e => e.Id == id);
         }
     }
 }

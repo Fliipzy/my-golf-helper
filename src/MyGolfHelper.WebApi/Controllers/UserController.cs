@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 namespace MyGolfHelper.WebApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/users")]
-    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService<User, long> _userService;
@@ -64,7 +64,7 @@ namespace MyGolfHelper.WebApi.Controllers
             }
 
             var mappedUser = _mapper.Map<User>(newUserDto);
-            var user = await _userService.CreateUser(mappedUser);
+            var user = await _userService.CreateUserAsync(mappedUser);
             var mappedUserDto = _mapper.Map<UserDto>(user);
 
             return Ok(mappedUserDto);

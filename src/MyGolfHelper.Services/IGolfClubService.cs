@@ -9,10 +9,10 @@ namespace MyGolfHelper.Services
 {
     public interface IGolfClubService<TGolfClub, TGolfClubId>
     {
-        public Task<IEnumerable<GolfClub>> GetAllGolfClubs();
-        public Task<GolfClub> FindGolfClub(TGolfClubId id);
-        public Task<int> UpdateGolfClub(TGolfClub golfClub);
-        public Task<GolfClub> CreateGolfClub(TGolfClub golfClub);
-        public Task<int> DeleteGolfClub(TGolfClubId id);
+        public Task<IEnumerable<GolfClub>> GetAllGolfClubsAsync();
+        public Task<GolfClub> FindGolfClubAsync(TGolfClubId id);
+        public Task<int> UpdateGolfClubAsync(TGolfClub golfClub);
+        public Task<bool> CreateGolfClubAsync(TGolfClub golfClub);
+        public Task<int> DeleteGolfClubAsync(TGolfClubId id);
     }
 }

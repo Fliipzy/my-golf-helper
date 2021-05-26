@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyGolfHelper.Models;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace MyGolfHelper.WebApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/golfcourses")]
     public class GolfCourseController : ControllerBase
     {
@@ -27,7 +29,7 @@ namespace MyGolfHelper.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GolfCourseDto>>> GetGolfCourses()
         {
-            var golfCourses = await _golfCourseService.GetAllGolfCourses();
+            var golfCourses = await _golfCourseService.GetAllGolfCoursesAsync();
 
             if (!golfCourses.Any())
             {
@@ -42,7 +44,7 @@ namespace MyGolfHelper.WebApi.Controllers
         [Route("{id}")]
         public async Task<ActionResult<GolfCourseDto>> GetGolfCourse(long id)
         {
-            var golfCourse = await _golfCourseService.FindGolfCourse(id);
+            var golfCourse = await _golfCourseService.FindGolfCourseAsync(id);
 
             if (golfCourse == null)
             {
@@ -62,7 +64,7 @@ namespace MyGolfHelper.WebApi.Controllers
             }
 
             var golfCourse = _mapper.Map<GolfCourse>(newGolfCourseRequestDto);
-            var wasCreated = await _golfCourseService.CreateGolfCourse(golfCourse);
+            var wasCreated = await _golfCourseService.CreateGolfCourseAsync(golfCourse);
 
             if (!wasCreated)
             {

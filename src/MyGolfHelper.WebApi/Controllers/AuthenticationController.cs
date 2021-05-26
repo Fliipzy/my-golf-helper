@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyGolfHelper.Models;
 using MyGolfHelper.Models.Dtos;
@@ -11,22 +12,25 @@ using System.Threading.Tasks;
 namespace MyGolfHelper.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IJwtService<User> _jwtService;
         private readonly IUserService<User, long> _userService;
 
         public AuthenticationController(
-            IAuthenticationService authenticationService, 
+            IAuthenticationService authenticationService,
+            IJwtService<User> jwtService,
             IUserService<User, long> userService)
         {
             _authenticationService = authenticationService;
+            _jwtService = jwtService;
             _userService = userService;
         }
 
         [HttpPost]
-        [Route("login")]
+        [AllowAnonymous]
+        [Route("api/authenticate")]
         public async Task<IActionResult> Login(UserLoginRequestDto userLoginDto)
         {
             if (!ModelState.IsValid)
@@ -47,7 +51,8 @@ namespace MyGolfHelper.WebApi.Controllers
             {
                 return Unauthorized();
             }
-            return Ok();
+            var accessToken = _jwtService.GenerateToken(foundUser);
+            return Ok(new { accessToken = accessToken });
         }
     }
 }

@@ -20,7 +20,7 @@ namespace MyGolfHelper.Services
             _contextFactory = contextFactory;
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
             using (var context = _contextFactory.CreateDbContext())
             {

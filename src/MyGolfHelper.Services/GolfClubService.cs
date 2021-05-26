@@ -6,27 +6,27 @@ namespace MyGolfHelper.Services
 {
     public class GolfClubService : IGolfClubService<GolfClub, long>
     {
-        public Task<GolfClub> CreateGolfClub(GolfClub golfClub)
+        public Task<bool> CreateGolfClubAsync(GolfClub golfClub)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<int> DeleteGolfClub(long id)
+        public Task<int> DeleteGolfClubAsync(long id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<GolfClub> FindGolfClub(long id)
+        public Task<GolfClub> FindGolfClubAsync(long id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<GolfClub>> GetAllGolfClubs()
+        public Task<IEnumerable<GolfClub>> GetAllGolfClubsAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<int> UpdateGolfClub(GolfClub golfClub)
+        public Task<int> UpdateGolfClubAsync(GolfClub golfClub)
         {
             throw new System.NotImplementedException();
         }
